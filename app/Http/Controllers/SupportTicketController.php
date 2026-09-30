@@ -19,8 +19,7 @@ class SupportTicketController extends Controller
         $tickets = SupportTicket::with(['customer', 'agent'])
             ->when($user->role !== 'agent', fn ($q) => $q->where('user_id', $user->id))
             ->when($request->status, fn ($q, $status) => $q->where('status', $status))
-            ->latest()
-            ->paginate(15);
+            ->get();
 
         return SupportTicketResource::collection($tickets);
     }
