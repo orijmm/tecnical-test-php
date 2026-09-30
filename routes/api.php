@@ -1,11 +1,14 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TokenController;
+use App\Http\Controllers\SupportTicketController;
 
 Route::post('/sanctum/token', TokenController::class);
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/tickets', [SupportTicketController::class, 'index']);
+    Route::post('/tickets', [SupportTicketController::class, 'store']);
+    Route::get('/tickets/{ticket}', [SupportTicketController::class, 'show']);
+    Route::patch('/tickets/{ticket}/assign', [SupportTicketController::class, 'assign']);
+});

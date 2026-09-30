@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Validation\Rule;
+use App\Enums\TicketPriority;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSupportTicketRequest extends FormRequest
@@ -12,7 +14,7 @@ class StoreSupportTicketRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +25,9 @@ class StoreSupportTicketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'subject' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'priority' => ['required', Rule::enum(TicketPriority::class)],
         ];
     }
 }

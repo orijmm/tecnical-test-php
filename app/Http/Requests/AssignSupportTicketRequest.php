@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -12,7 +13,7 @@ class AssignSupportTicketRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,8 +23,16 @@ class AssignSupportTicketRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
+       return [
+            'agent_id' => [
+                'required',
+                'integer',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    if (! User::agents()->whereKey($value)->exists()) {
+                        $fail('El usuario seleccionado no es un agente.');
+                    }
+                },
+            ],
         ];
     }
 }
